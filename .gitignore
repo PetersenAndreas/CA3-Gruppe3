@@ -93,4 +93,7 @@ modules.xml
 # Sonarlint plugin
 .idea/sonarlint
 
+# SharedSecret Document
+sharedSecret.properties
+
 # End of https://www.gitignore.io/api/intellij+all
