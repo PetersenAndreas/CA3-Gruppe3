@@ -30,7 +30,7 @@ public class SharedSecret {
 //        }
         try {
 
-            InputStream input = SharedSecret.class.getResourceAsStream("/SharedSecret.properties");
+            InputStream input = SharedSecret.class.getResourceAsStream("/sharedsecret.properties");
             Properties pros = new Properties();
 
             pros.load(input);
