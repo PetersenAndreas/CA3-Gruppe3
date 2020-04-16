@@ -1,6 +1,7 @@
 package security;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.nimbusds.jose.JOSEException;
@@ -10,6 +11,7 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import entities.Role;
 import facades.UserFacade;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +48,14 @@ public class LoginEndpoint {
       User user = USER_FACADE.getVeryfiedUser(username, password);
       String token = createToken(username, user.getRolesAsStrings());
       JsonObject responseJson = new JsonObject();
+      //STUDENT INPUT: Adding roles to the response for use on client-site
+      JsonArray userRoles = new JsonArray();        
+        for (Role role : user.getRoleList()) {
+            userRoles.add(role.getRoleName());
+        }
       responseJson.addProperty("username", username);
+      //STUDENT INPUT: Adding roles to the response for use on client-site
+      responseJson.add("roles", userRoles);
       responseJson.addProperty("token", token);
       return Response.ok(new Gson().toJson(responseJson)).build();
 
