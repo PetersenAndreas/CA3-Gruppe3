@@ -8,7 +8,13 @@ import dto.CopenhagenTimeDTO;
 import dto.CountryDTO;
 import entities.User;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -81,23 +87,50 @@ public class DemoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("external")
     public String getFromExternalAPI() {
+
+        ChuckJokeDTO chuck;
+        DadJokeDTO dad;
+        CountryDTO country;
+        CopenhagenTimeDTO time;
+
+        String[] fetchStrings = new String[]{
+            ChuckJokeDTO.getRANDOM_URL(),
+            DadJokeDTO.getRANDOM_URL(),
+            CountryDTO.getCOUNTRY_URL(),
+            CopenhagenTimeDTO.getTIME_URL()
+        };
+
+        String[] fetched = new String[fetchStrings.length];
+
+        ExecutorService workingJack = Executors.newFixedThreadPool(fetchStrings.length);
+
         try {
-            String chuckString = HttpUtils.fetchData(ChuckJokeDTO.getRANDOM_URL());
-            ChuckJokeDTO chuck = GSON.fromJson(chuckString, ChuckJokeDTO.class);
+            for (int i = 0; i < fetchStrings.length; i++) {
+                final int n = i;
+                Runnable task = () -> {
+                    try {
+                        fetched[n] = HttpUtils.fetchData(fetchStrings[n]);
+                    } catch (IOException ex) {
+                        Logger.getLogger(DemoResource.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                };
+                workingJack.submit(task);
+            }
 
-            String dadString = HttpUtils.fetchData(DadJokeDTO.getRANDOM_URL());
-            DadJokeDTO dad = GSON.fromJson(dadString, DadJokeDTO.class);
+            workingJack.shutdown();
+            workingJack.awaitTermination(5, TimeUnit.SECONDS);
 
-            String countryString = HttpUtils.fetchData(CountryDTO.getCOUNTRY_URL());
-            CountryDTO[] country = GSON.fromJson(countryString, CountryDTO[].class);
-            
-            String timeString = HttpUtils.fetchData(CopenhagenTimeDTO.getTIME_URL());
-            CopenhagenTimeDTO time = GSON.fromJson(timeString, CopenhagenTimeDTO.class);
+            chuck = GSON.fromJson(fetched[0], ChuckJokeDTO.class);
+            dad = GSON.fromJson(fetched[1], DadJokeDTO.class);
+            country = GSON.fromJson(fetched[2], CountryDTO[].class)[0];
+            time = GSON.fromJson(fetched[3], CopenhagenTimeDTO.class);
 
-            ApiDTO apis = new ApiDTO(chuck, dad, country[0], time);
+            ApiDTO apis = new ApiDTO(chuck, dad, country, time);
             return GSON.toJson(apis);
-        } catch (IOException ex) {
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DemoResource.class.getName()).log(Level.SEVERE, null, ex);
             return "{\"info\":\"Error\"}";
         }
     }
+
 }
