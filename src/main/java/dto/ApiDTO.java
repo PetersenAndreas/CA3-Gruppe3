@@ -1,7 +1,9 @@
 package dto;
 
+import java.util.Objects;
+
 public class ApiDTO {
-    
+
     private String chuckJoke;
     private String chuckJokeID;
     private final String chuckURL = ChuckJokeDTO.getRANDOM_URL();
@@ -14,19 +16,40 @@ public class ApiDTO {
     private String copenhagenTime;
     private String weekNumber;
     private final String timeURL = CopenhagenTimeDTO.getTIME_URL();
+    private final static String COULD_NOT_FETCH = "Could not fetch this data";
 
     public ApiDTO() {
     }
 
     public ApiDTO(ChuckJokeDTO chuck, DadJokeDTO dad, CountryDTO country, CopenhagenTimeDTO time) {
-        this.chuckJoke = chuck.getValue();
-        this.chuckJokeID = chuck.getId();
-        this.dadJoke = dad.getJoke();
-        this.dadJokeID = dad.getId();
-        this.countryName = country.getName();
-        this.countryArea = country.getArea();
-        this.copenhagenTime = time.getDatetime();
-        this.weekNumber = time.getWeek_number();
+        if (!Objects.isNull(chuck)) {
+            this.chuckJoke = chuck.getValue();
+            this.chuckJokeID = chuck.getId();
+        } else {
+            this.chuckJoke = COULD_NOT_FETCH;
+            this.chuckJokeID = COULD_NOT_FETCH;
+        }
+        if (!Objects.isNull(dad)) {
+            this.dadJoke = dad.getJoke();
+            this.dadJokeID = dad.getId();
+        } else {
+            this.dadJoke = COULD_NOT_FETCH;
+            this.dadJokeID = COULD_NOT_FETCH;
+        }
+        if (!Objects.isNull(country)) {
+            this.countryName = country.getName();
+            this.countryArea = country.getArea();
+        } else {
+            this.countryName = COULD_NOT_FETCH;
+            this.countryArea = COULD_NOT_FETCH;
+        }
+        if (!Objects.isNull(time)) {
+            this.copenhagenTime = time.getDatetime();
+            this.weekNumber = time.getWeek_number();
+        } else {
+            this.copenhagenTime = COULD_NOT_FETCH;
+            this.weekNumber = COULD_NOT_FETCH;
+        }
     }
 
     public String getChuckJoke() {
@@ -96,5 +119,5 @@ public class ApiDTO {
     public void setCountryArea(String countryArea) {
         this.countryArea = countryArea;
     }
-    
+
 }

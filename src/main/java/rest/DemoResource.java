@@ -10,6 +10,7 @@ import entities.User;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -88,20 +89,13 @@ public class DemoResource {
     @Path("external")
     public String getFromExternalAPI() {
 
-        ChuckJokeDTO chuck;
-        DadJokeDTO dad;
-        CountryDTO country;
-        CopenhagenTimeDTO time;
-
         String[] fetchStrings = new String[]{
             ChuckJokeDTO.getRANDOM_URL(),
             DadJokeDTO.getRANDOM_URL(),
             CountryDTO.getCOUNTRY_URL(),
             CopenhagenTimeDTO.getTIME_URL()
         };
-
         String[] fetched = new String[fetchStrings.length];
-
         ExecutorService workingJack = Executors.newFixedThreadPool(fetchStrings.length);
 
         try {
@@ -120,11 +114,11 @@ public class DemoResource {
             workingJack.shutdown();
             workingJack.awaitTermination(5, TimeUnit.SECONDS);
 
-            chuck = GSON.fromJson(fetched[0], ChuckJokeDTO.class);
-            dad = GSON.fromJson(fetched[1], DadJokeDTO.class);
-            country = GSON.fromJson(fetched[2], CountryDTO[].class)[0];
-            time = GSON.fromJson(fetched[3], CopenhagenTimeDTO.class);
-
+            ChuckJokeDTO chuck = GSON.fromJson(fetched[0], ChuckJokeDTO.class);
+            DadJokeDTO dad = GSON.fromJson(fetched[1], DadJokeDTO.class);
+            CountryDTO country = GSON.fromJson(fetched[2], CountryDTO[].class)[0];
+            CopenhagenTimeDTO time = GSON.fromJson(fetched[3], CopenhagenTimeDTO.class);
+            
             ApiDTO apis = new ApiDTO(chuck, dad, country, time);
             return GSON.toJson(apis);
         } catch (InterruptedException ex) {
