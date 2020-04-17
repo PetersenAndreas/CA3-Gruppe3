@@ -57,8 +57,9 @@ public class DemoResourceTest {
         httpServer.shutdownNow();
     }
     
-    /* on each of the 8 endpoints we first test whether it's not null
-    and then whether the endpoint's empty */
+    /* on each of the 8 endpoints we first test whether the data is not null
+    and then whether the endpoint's empty. These tests are very hardcoded,
+    but as the endpoints return randomized data it's a logical solution */
     @Test
     public void testExternalAPIEndpoint() {
         ApiDTO result = given()
