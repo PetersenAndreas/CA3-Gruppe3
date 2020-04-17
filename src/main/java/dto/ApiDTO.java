@@ -120,4 +120,19 @@ public class ApiDTO {
         this.countryArea = countryArea;
     }
 
+    public String getCopenhagenTime() {
+        return copenhagenTime;
+    }
+
+    public void setCopenhagenTime(String copenhagenTime) {
+        this.copenhagenTime = copenhagenTime;
+    }
+
+    public String getWeekNumber() {
+        return weekNumber;
+    }
+
+    public void setWeekNumber(String weekNumber) {
+        this.weekNumber = weekNumber;
+    }
 }

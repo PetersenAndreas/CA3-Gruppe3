@@ -117,6 +117,7 @@ public class LoginEndpointTest {
     given().when().get("/info").then().statusCode(200);
   }
 
+  //testing login with no authentication / known state
   @Test
   public void testRestNoAuthenticationRequired() {
     given()
@@ -127,6 +128,7 @@ public class LoginEndpointTest {
             .body("msg", equalTo("Hello anonymous"));
   }
 
+  //testing login as an admin
   @Test
   public void testRestForAdmin() {
     login("admin", "test");
@@ -140,6 +142,7 @@ public class LoginEndpointTest {
             .body("msg", equalTo("Hello to (admin) User: admin"));
   }
 
+  //testing login as a user
   @Test
   public void testRestForUser() {
     login("user", "test");
@@ -152,6 +155,7 @@ public class LoginEndpointTest {
             .body("msg", equalTo("Hello to User: user"));
   }
   
+  //testing that access to admin as a user isn't possible.
   @Test
   public void testAutorizedUserCannotAccesAdminPage() {
     login("user", "test");
@@ -159,10 +163,11 @@ public class LoginEndpointTest {
             .contentType("application/json")
             .header("x-access-token", securityToken)
             .when()
-            .get("/info/admin").then()  //Call Admin endpoint as user
+            .get("/info/admin").then() //Calling admin endpoint as user
             .statusCode(401);
   }
   
+  //testing that access to user as an admin isn't possible.
   @Test
   public void testAutorizedAdminCannotAccesUserPage() {
     login("admin", "test");
@@ -170,10 +175,11 @@ public class LoginEndpointTest {
             .contentType("application/json")
             .header("x-access-token", securityToken)
             .when()
-            .get("/info/user").then()  //Call User endpoint as Admin
+            .get("/info/user").then()  //Calling user endpoint as admin
             .statusCode(401);
   }
   
+  //testing access to admin as a multi-user (both admin and user)
   @Test
   public void testRestForMultiRole1() {
     login("user_admin", "test");
@@ -182,11 +188,12 @@ public class LoginEndpointTest {
             .accept(ContentType.JSON)
             .header("x-access-token", securityToken)
             .when()
-            .get("/info/admin").then()
+            .get("/info/admin").then() //Calling admin endpoint
             .statusCode(200)
             .body("msg", equalTo("Hello to (admin) User: user_admin"));
   }
 
+  //testing access to user as a multi-user (both admin and user)
   @Test
   public void testRestForMultiRole2() {
     login("user_admin", "test");
@@ -194,11 +201,12 @@ public class LoginEndpointTest {
             .contentType("application/json")
             .header("x-access-token", securityToken)
             .when()
-            .get("/info/user").then()
+            .get("/info/user").then() //Calling user endpoint
             .statusCode(200)
             .body("msg", equalTo("Hello to User: user_admin"));
   }
 
+  //testing that user isn't authenticated in the system when logged out
   @Test
   public void userNotAuthenticated() {
     logOut();
@@ -211,6 +219,7 @@ public class LoginEndpointTest {
             .body("message", equalTo("Not authenticated - do login"));
   }
 
+  //testing that admin isn't authenticated in the system when logged out
   @Test
   public void adminNotAuthenticated() {
     logOut();
@@ -222,6 +231,4 @@ public class LoginEndpointTest {
             .body("code", equalTo(403))
             .body("message", equalTo("Not authenticated - do login"));
   }
-    
-    
 }
