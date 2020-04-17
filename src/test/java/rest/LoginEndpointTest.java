@@ -222,6 +222,4 @@ public class LoginEndpointTest {
             .body("code", equalTo(403))
             .body("message", equalTo("Not authenticated - do login"));
   }
-    
-    
 }
