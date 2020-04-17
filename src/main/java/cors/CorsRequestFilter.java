@@ -11,6 +11,12 @@ import javax.ws.rs.ext.Provider;
 //Comment out these two annotations below to disable CORS-handling
 @Provider  //This will ensure that the filter is used "automatically"
 @PreMatching
+
+/* Cross-origin resource sharing. CORS elements are used to define resource
+sharing across "platforms", I.E using resources from other foreign origins,
+while restricting yet another to protect the system.
+CORS defines how and who can partake in this cross-sharing and aims to make
+cross-sharing as secure as possible. */
 public class CorsRequestFilter implements ContainerRequestFilter {
   private final static Logger log = Logger.getLogger(CorsRequestFilter.class.getName());
   @Override

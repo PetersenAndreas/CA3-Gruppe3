@@ -28,6 +28,9 @@ public class UserFacade {
         return instance;
     }
     
+    /* used to search for a user and throws an exception if user either doesn't
+    exist or the values are wrong */
+    
     public User getVeryfiedUser(String username, String password) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();
         User user;

@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 
+/* This class is intended as a very simple dummy class to turn into another
+relevant entity class in the future */
 
 //@Entity
 //@NamedQuery(name = "RenameMe.deleteAllRows", query = "DELETE from RenameMe")
