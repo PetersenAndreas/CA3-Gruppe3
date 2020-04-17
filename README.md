@@ -57,6 +57,8 @@
  - If everything was fine, commit and push your changes
  - On *travis-ci.org* verify that your commit has been detected and a "build cycle" has started
  - If everything was fine (might take a few minutes) verify that Travis has deployed your new war file to your droplet
+ - Remember to change the travis "build passing" emblem/sticker to match you own build log.
+   - In your travis build click the emblem select "markdown", copy the result, insert in the top of your README.md file
 
 ### IMPORTENT NOTE ON DUMMY DATA
  *Make sure you read the comment area and follow the instruct, in the SetupTestUsers.java in the utils packages*
